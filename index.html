@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moeg1wara</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="loading-init"><span class="loading-init__status">Loading...</span></div>
+
+    <div class="ulang-tahun-message">
+        <span>Ciee.. dah kepala due yee!!!</span><br>
+        <img src="20th.jpg" alt="Foto Ulang Tahun" class="ulang-tahun-photo">
+        <br> <span>20th</span>
+    </div>
+
+    <div class="stage-container remove">
+        <div class="canvas-container">
+            <canvas id="trails-canvas"></canvas>
+            <canvas id="main-canvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Placeholder dan Kelas Stage tetap sama seperti sebelumnya
+        window.fscreen = {
+            fullscreenEnabled: false, fullscreenElement: null, requestFullscreen: () => {}, exitFullscreen: () => {}, addEventListener: () => {}, removeEventListener: () => {}
+        };
+
+        window.MyMath = {
+            clamp: (val, min, max) => Math.max(min, Math.min(val, max)),
+            random: (min, max) => Math.random() * (max - min) + min,
+            randomChoice: (arr) => arr[Math.random() * arr.length | 0],
+            pointDist: (x1, y1, x2, y2) => Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
+            pointAngle: (x1, y1, x2, y2) => Math.atan2(y2 - y1, x2 - x1)
+        };
+
+        class Stage {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.dpr = window.devicePixelRatio || 1;
+                this.resize(window.innerWidth, window.innerHeight);
+
+                this.pointerEvents = {};
+                this.canvas.addEventListener('mousedown', (e) => {
+                    const event = { x: e.clientX, y: e.clientY, onCanvas: true };
+                    this.pointerEvents['pointerstart'] && this.pointerEvents['pointerstart'](event);
+                });
+                this.canvas.addEventListener('mouseup', (e) => {
+                    const event = { x: e.clientX, y: e.clientY, onCanvas: true };
+                    this.pointerEvents['pointerend'] && this.pointerEvents['pointerend'](event);
+                });
+                this.canvas.addEventListener('mousemove', (e) => {
+                    const event = { x: e.clientX, y: e.clientY, onCanvas: true };
+                    this.pointerEvents['pointermove'] && this.pointerEvents['pointermove'](event);
+                });
+
+                this.tickerListeners = [];
+                this.lastFrameTime = performance.now();
+                this.tick();
+            }
+
+            resize(width, height) {
+                this.width = width;
+                this.height = height;
+                this.canvas.width = width * this.dpr;
+                this.canvas.height = height * this.dpr;
+                this.ctx.scale(this.dpr, this.dpr);
+            }
+
+            addEventListener(type, listener) {
+                if (type === 'ticker') {
+                    this.tickerListeners.push(listener);
+                } else if (['pointerstart', 'pointerend', 'pointermove'].includes(type)) {
+                    this.pointerEvents[type] = listener;
+                }
+            }
+
+            tick = () => {
+                const now = performance.now();
+                const lag = now - this.lastFrameTime;
+                this.lastFrameTime = now;
+
+                this.tickerListeners.forEach(listener => listener(lag, lag / (1000 / 60)));
+
+                requestAnimationFrame(this.tick);
+            }
+        }
+    </script>
+
+    <script src="js.js"></script>
+</body>
+</html>

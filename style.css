@@ -1,0 +1,144 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stage-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.canvas-container {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.loading-init {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-family: sans-serif;
+    font-size: 1.2em;
+    z-index: 100;
+    text-align: center;
+}
+
+.controls, .menu {
+    display: none !important;
+}
+
+/* --- CSS REVISI UNTUK UCAPAN ULANG TAHUN DAN FOTO AGAR LEBIH RAPI --- */
+.ulang-tahun-message {
+    position: absolute; /* Tetap absolute agar di tengah layar */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Penengahan mutlak */
+
+    color: #FFFFFF;
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    
+    /* Ukuran font utama untuk seluruh pesan, ini akan menentukan seberapa besar teks dan foto */
+    font-size: clamp(20px, 5.5vw, 65px); /* Tetap sama seperti sebelumnya */
+
+    /* Gunakan Flexbox untuk mengatur layout internal: teks atas, foto, teks bawah */
+    display: flex;
+    flex-direction: column; /* Tata elemen dalam kolom (atas ke bawah) */
+    align-items: center; /* Tengahkan item secara horizontal (teks dan foto) */
+    justify-content: center; /* Tengahkan item secara vertikal (jika ada ruang) */
+    
+    width: 100%; /* Memastikan kontainer pesan mengambil lebar penuh untuk penengahan */
+    max-width: 95%; /* Batasi lebar total pesan agar tidak melebihi 95% layar */
+    
+    text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.6),
+        0 0 20px rgba(255, 255, 255, 0.4),
+        0 0 30px rgba(255, 215, 0, 0.3);
+    z-index: 99;
+    opacity: 0;
+    animation: fadeInAndOut 10s forwards infinite;
+    pointer-events: none;
+    text-align: center; /* Menengahkan teks di dalam span */
+    line-height: 1.2;
+    box-sizing: border-box;
+    padding: 0 5px; /* Sedikit padding horizontal */
+}
+
+/* Styling untuk masing-masing baris teks */
+.ulang-tahun-message span {
+    /* display: block; // Tidak perlu display: block; lagi karena parent sudah flex-column */
+    white-space: nowrap; /* Mencegah setiap baris pindah ke bawah */
+    /* overflow: hidden; // Ganti visible menjadi hidden atau biarkan default jika tidak ingin tumpah */
+    /* text-overflow: clip; // Ganti clip jika ingin ellipsis */
+    
+    /* Pastikan font-size ini diatur ulang atau diwarisi dengan benar dari parent */
+    /* Kita bisa gunakan inherit agar font-size dari .ulang-tahun-message diterapkan */
+    font-size: inherit; 
+    line-height: inherit; /* Pastikan line-height juga diwarisi */
+    margin: 5px 0; /* Memberi sedikit jarak atas/bawah pada setiap baris teks */
+}
+
+/* --- CSS UNTUK FOTO --- */
+.ulang-tahun-photo {
+    display: block; /* Tetap block */
+    margin: 15px auto; /* Memberi jarak vertikal dari teks dan menengahkan horizontal */
+    border-radius: 50%;
+    border: 3px solid #FFD700;
+    object-fit: cover;
+
+    /* Ukuran default untuk desktop / layar lebar */
+    width: clamp(80px, 20vw, 200px);
+    height: clamp(80px, 20vw, 200px);
+
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4),
+                0 0 20px rgba(255, 215, 0, 0.6);
+
+    animation: photoPulse 3s infinite alternate;
+}
+
+/* MEDIA QUERY BARU UNTUK UKURAN FOTO DI LAYAR KECIL (Android/Mobile) */
+@media (max-width: 768px) {
+    .ulang-tahun-photo {
+        width: clamp(100px, 30vw, 250px);
+        height: clamp(100px, 30vw, 250px);
+    }
+}
+
+@media (max-width: 480px) {
+    .ulang-tahun-photo {
+        width: clamp(120px, 35vw, 280px);
+        height: clamp(120px, 35vw, 280px);
+    }
+}
+/* --- AKHIR MEDIA QUERY BARU --- */
+
+
+/* Keyframes untuk animasi teks */
+@keyframes fadeInAndOut {
+    0% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
+    10% { opacity: 1; transform: translate(-50%, -50%) translateY(0px); }
+    40% { opacity: 1; transform: translate(-50%, -50%) translateY(0px); }
+    50% { opacity: 0; transform: translate(-50%, -50%) translateY(-20px); }
+    100% { opacity: 0; }
+}
